@@ -1,5 +1,7 @@
 import json
 import re
+import requests
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
@@ -160,7 +162,66 @@ def api_chatbot(request):
     return JsonResponse({'success': True, 'response': reply})
 
 
+logger = logging.getLogger(__name__)
+
+SARVAM_SYSTEM_PROMPT = """You are the friendly assistant for Womenovators Club — a college community empowering women in technology.
+
+Key facts about the club:
+- Mission: Empower, Educate, Elevate women in tech
+- Membership is completely FREE
+- Teams: Technical, Media, Event, and Industry Collaboration (auto-assigned based on skills)
+- Events: Quiz Competitions, Debates, Poster-Making Contests, Caricature, Workshops
+- Workshops: Web Dev, AI/ML, UI/UX Design, Cybersecurity, and more
+- Certificates are provided for event participation
+- Contact: info@womenovatorsclub.com
+
+Useful links to share:
+- Membership: /membership/
+- Events: /events/
+- Workshops: /workshops/
+- About: /about/
+- Contact: /contact/
+
+Keep responses concise (2-3 sentences), friendly, and helpful. Use emojis sparingly. If asked something unrelated to the club, politely steer back to club topics."""
+
+
 def get_chatbot_response(message):
+    api_key = getattr(django_settings, 'SARVAM_API_KEY', '')
+    if api_key:
+        try:
+            return _sarvam_chat(message, api_key)
+        except Exception as e:
+            logger.warning(f'Sarvam AI error: {e}')
+    return _fallback_response(message)
+
+
+def _sarvam_chat(message, api_key):
+    resp = requests.post(
+        'https://api.sarvam.ai/v1/chat/completions',
+        headers={
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json',
+        },
+        json={
+            'model': 'sarvam-m',
+            'messages': [
+                {'role': 'system', 'content': SARVAM_SYSTEM_PROMPT},
+                {'role': 'user', 'content': message},
+            ],
+            'max_tokens': 300,
+            'temperature': 0.7,
+        },
+        timeout=15,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    content = data['choices'][0]['message']['content'].strip()
+    # Strip <think>...</think> reasoning tags from response
+    content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+    return content
+
+
+def _fallback_response(message):
     msg = message.lower().strip()
     responses = {
         r'join|register|member|signup|sign up':

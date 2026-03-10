@@ -129,5 +129,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = '/dashboard/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# OpenAI API Key (optional — chatbot works offline)
-OPENAI_API_KEY = ''
+# Sarvam AI API Key
+SARVAM_API_KEY = os.environ.get('SARVAM_API_KEY', 'sk_ygiumopr_QFdAacKl8ACZeKFIEl1ssAjD')
