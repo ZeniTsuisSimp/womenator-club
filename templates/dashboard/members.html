@@ -1,0 +1,88 @@
+{% extends 'dashboard/base_admin.html' %}
+{% block title %}Manage Members{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h4 class="fw-bold mb-0"><i class="fas fa-users me-2"></i>Members Management</h4>
+</div>
+
+<!-- Filters -->
+<div class="admin-card mb-4">
+    <div class="admin-card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Search</label>
+                <input type="text" class="form-control" name="search" value="{{ request.GET.search }}" placeholder="Name, email, registration ID...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Status</label>
+                <select class="form-select" name="status">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="approved" {% if request.GET.status == 'approved' %}selected{% endif %}>Approved</option>
+                    <option value="rejected" {% if request.GET.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Team</label>
+                <select class="form-select" name="team">
+                    <option value="">All Teams</option>
+                    <option value="Tech" {% if request.GET.team == 'Tech' %}selected{% endif %}>Tech</option>
+                    <option value="Creative" {% if request.GET.team == 'Creative' %}selected{% endif %}>Creative</option>
+                    <option value="Management" {% if request.GET.team == 'Management' %}selected{% endif %}>Management</option>
+                    <option value="PR" {% if request.GET.team == 'PR' %}selected{% endif %}>PR & Outreach</option>
+                    <option value="Research" {% if request.GET.team == 'Research' %}selected{% endif %}>Research</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-admin w-100"><i class="fas fa-search me-1"></i>Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Members Table -->
+<div class="admin-card">
+    <div class="admin-card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr><th>Reg. ID</th><th>Name</th><th>Email</th><th>Course</th><th>Team</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                {% for m in members %}
+                <tr>
+                    <td><code>{{ m.registration_id }}</code></td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if m.photo %}
+                            <img src="{{ m.photo.url }}" class="rounded-circle me-2" width="35" height="35" style="object-fit:cover">
+                            {% else %}
+                            <div class="rounded-circle bg-purple text-white d-flex align-items-center justify-content-center me-2" style="width:35px;height:35px;font-size:.8rem;">{{ m.full_name|first }}</div>
+                            {% endif %}
+                            {{ m.full_name }}
+                        </div>
+                    </td>
+                    <td>{{ m.email }}</td>
+                    <td>{{ m.department }} - {{ m.year_semester }}</td>
+                    <td><span class="badge bg-purple">{{ m.team_assigned }}</span></td>
+                    <td><span class="badge bg-{{ m.status }}">{{ m.get_status_display }}</span></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            {% if m.status == 'pending' %}
+                            <a href="?action=approve&id={{ m.id }}&{{ request.GET.urlencode }}" class="btn btn-outline-success" title="Approve"><i class="fas fa-check"></i></a>
+                            <a href="?action=reject&id={{ m.id }}&{{ request.GET.urlencode }}" class="btn btn-outline-warning" title="Reject"><i class="fas fa-times"></i></a>
+                            {% endif %}
+                            <a href="?action=delete&id={{ m.id }}&{{ request.GET.urlencode }}" class="btn btn-outline-danger" title="Delete" onclick="return confirm('Delete this member?')"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No members found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

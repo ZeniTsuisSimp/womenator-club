@@ -1,0 +1,119 @@
+{% extends 'dashboard/base_admin.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<h4 class="fw-bold mb-4"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Overview</h4>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card stat-purple">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-number">{{ total_members }}</div>
+            <div class="stat-label">Total Members</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card stat-pink">
+            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="stat-number">{{ total_events }}</div>
+            <div class="stat-label">Total Events</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card stat-blue">
+            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+            <div class="stat-number">{{ total_registrations }}</div>
+            <div class="stat-label">Registrations</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card stat-green">
+            <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+            <div class="stat-number">{{ unread_messages }}</div>
+            <div class="stat-label">Unread Messages</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="admin-card">
+            <div class="admin-card-header"><h6 class="fw-bold mb-0"><i class="fas fa-chart-bar me-2"></i>Member Registration Trend</h6></div>
+            <div class="admin-card-body"><canvas id="memberChart" height="250"></canvas></div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-card">
+            <div class="admin-card-header"><h6 class="fw-bold mb-0"><i class="fas fa-chart-pie me-2"></i>Team Distribution</h6></div>
+            <div class="admin-card-body"><canvas id="teamChart" height="250"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="admin-card-header"><h6 class="fw-bold mb-0"><i class="fas fa-user-clock me-2"></i>Recent Members</h6></div>
+            <div class="admin-card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead><tr><th>Name</th><th>Team</th><th>Status</th></tr></thead>
+                        <tbody>
+                        {% for m in recent_members %}
+                        <tr>
+                            <td>{{ m.full_name }}</td>
+                            <td><span class="badge bg-purple">{{ m.team_assigned }}</span></td>
+                            <td><span class="badge bg-{{ m.status }}">{{ m.get_status_display }}</span></td>
+                        </tr>
+                        {% empty %}<tr><td colspan="3" class="text-center text-muted py-3">No members yet</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="admin-card-header"><h6 class="fw-bold mb-0"><i class="fas fa-envelope me-2"></i>Recent Messages</h6></div>
+            <div class="admin-card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead><tr><th>Name</th><th>Subject</th><th>Date</th></tr></thead>
+                        <tbody>
+                        {% for c in recent_messages %}
+                        <tr class="{% if not c.is_read %}fw-bold{% endif %}">
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.subject|truncatewords:5 }}</td>
+                            <td>{{ c.created_at|date:"M j" }}</td>
+                        </tr>
+                        {% empty %}<tr><td colspan="3" class="text-center text-muted py-3">No messages yet</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block dashboard_js %}
+<script>
+const mLabels = {{ chart_labels|safe }};
+const mData = {{ chart_data|safe }};
+new Chart(document.getElementById('memberChart'),{
+    type:'bar',
+    data:{labels:mLabels,datasets:[{label:'New Members',data:mData,backgroundColor:'rgba(123,45,142,0.7)',borderRadius:8}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}
+});
+
+const tLabels = {{ team_labels|safe }};
+const tData = {{ team_counts|safe }};
+new Chart(document.getElementById('teamChart'),{
+    type:'doughnut',
+    data:{labels:tLabels,datasets:[{data:tData,backgroundColor:['#7B2D8E','#E91E8C','#3498DB','#2ECC71','#F39C12','#E74C3C']}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}
+});
+</script>
+{% endblock %}

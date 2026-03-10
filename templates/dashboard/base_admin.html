@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} | Womenovators Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <nav class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <h4><i class="fas fa-crown me-2"></i>Womenovators</h4>
+                <small>Admin Panel</small>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'manage_members' %}active{% endif %}">
+                    <a href="{% url 'manage_members' %}"><i class="fas fa-users"></i><span>Members</span></a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'manage_events' %}active{% endif %}">
+                    <a href="{% url 'manage_events' %}"><i class="fas fa-calendar-alt"></i><span>Events</span></a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'manage_achievements' %}active{% endif %}">
+                    <a href="{% url 'manage_achievements' %}"><i class="fas fa-trophy"></i><span>Achievements</span></a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'manage_gallery' %}active{% endif %}">
+                    <a href="{% url 'manage_gallery' %}"><i class="fas fa-images"></i><span>Gallery</span></a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'manage_certificates' %}active{% endif %}">
+                    <a href="{% url 'manage_certificates' %}"><i class="fas fa-certificate"></i><span>Certificates</span></a>
+                </li>
+                <li class="divider"></li>
+                <li><a href="{% url 'index' %}"><i class="fas fa-globe"></i><span>View Site</span></a></li>
+                <li><a href="{% url 'dashboard_logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="admin-content">
+            <div class="admin-topbar">
+                <button class="btn btn-link d-lg-none" id="sidebarToggle"><i class="fas fa-bars fa-lg"></i></button>
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <span class="text-muted">Welcome, <strong>{{ request.user.username }}</strong></span>
+                </div>
+            </div>
+            <div class="admin-main p-4">
+                {% if messages %}
+                {% for msg in messages %}
+                <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">{{ msg }}<button class="btn-close" data-bs-dismiss="alert"></button></div>
+                {% endfor %}
+                {% endif %}
+                {% block dashboard_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+    document.getElementById('sidebarToggle')?.addEventListener('click',()=>{
+        document.getElementById('adminSidebar').classList.toggle('show');
+    });
+    </script>
+    {% block dashboard_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Become a Member | Womenovators Club{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Join <span>Womenovators</span></h1>
+        <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
+            <ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li><li class="breadcrumb-item active">Membership</li></ol>
+        </nav>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5" data-aos="fade-right">
+                <h3 class="fw-bold mb-3" style="color:var(--dark-purple)">Why Join Us?</h3>
+                <p class="text-muted mb-4">Become part of a vibrant community dedicated to empowering women through technology, creativity, and leadership.</p>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-robot"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">AI-Powered Team Assignment</h6><p class="text-muted small mb-0">Our AI analyses your skills and interests to place you in the perfect team.</p></div>
+                </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-certificate"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Event Certificates</h6><p class="text-muted small mb-0">Receive official certificates for every event you participate in.</p></div>
+                </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-users"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Network & Grow</h6><p class="text-muted small mb-0">Connect with like-minded women and build lasting professional relationships.</p></div>
+                </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-trophy"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Recognition</h6><p class="text-muted small mb-0">Your achievements are showcased on our platform and social media.</p></div>
+                </div>
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="custom-card p-4 p-md-5">
+                    <h4 class="fw-bold mb-4" style="color:var(--dark-purple)"><i class="fas fa-user-plus me-2"></i>Membership Application</h4>
+                    {% if messages %}
+                    {% for msg in messages %}
+                    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">{{ msg }}<button class="btn-close" data-bs-dismiss="alert"></button></div>
+                    {% endfor %}
+                    {% endif %}
+                    <form method="post" action="{% url 'membership' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" name="full_name" placeholder="Name" required><label>Full Name *</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="email" class="form-control" name="email" placeholder="Email" required><label>Email *</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="tel" class="form-control" name="phone" placeholder="Phone" required><label>Phone *</label></div></div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" name="department" required>
+                                        <option value="">Select Department</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Electrical">Electrical</option>
+                                        <option value="Mechanical">Mechanical</option>
+                                        <option value="Civil">Civil</option>
+                                        <option value="Data Science">Data Science</option>
+                                        <option value="AI & ML">AI & ML</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <label>Department *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" name="year_semester" required>
+                                        <option value="">Select Year/Semester</option>
+                                        <option value="1st Year - Sem 1">1st Year - Sem 1</option>
+                                        <option value="1st Year - Sem 2">1st Year - Sem 2</option>
+                                        <option value="2nd Year - Sem 3">2nd Year - Sem 3</option>
+                                        <option value="2nd Year - Sem 4">2nd Year - Sem 4</option>
+                                        <option value="3rd Year - Sem 5">3rd Year - Sem 5</option>
+                                        <option value="3rd Year - Sem 6">3rd Year - Sem 6</option>
+                                        <option value="4th Year - Sem 7">4th Year - Sem 7</option>
+                                        <option value="4th Year - Sem 8">4th Year - Sem 8</option>
+                                    </select>
+                                    <label>Year / Semester *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" name="achievements" placeholder="Achievements"><label>Achievements</label></div></div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" name="skills" placeholder="Skills" style="height:80px" required></textarea>
+                                    <label>Skills & Interests (comma-separated) *</label>
+                                </div>
+                                <small class="text-muted">E.g.: Python, Web Design, AI, Public Speaking, Content Writing</small>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Profile Photo</label>
+                                <input type="file" class="form-control" name="photo" accept="image/*">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary-custom btn-lg w-100"><i class="fas fa-paper-plane me-2"></i>Submit Application</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

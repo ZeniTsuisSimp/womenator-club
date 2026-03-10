@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Workshops | Womenovators Club{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Our <span>Workshops</span></h1>
+        <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
+            <ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li><li class="breadcrumb-item active">Workshops</li></ol>
+        </nav>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4">
+            {% for ws in workshops %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:50 }}">
+                <div class="custom-card h-100 p-4">
+                    {% if ws.image %}
+                    <img src="{{ ws.image.url }}" alt="{{ ws.title }}" class="rounded mb-3 w-100" style="height:200px; object-fit:cover;">
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-center rounded mb-3" style="height:200px; background:var(--gradient-primary);"><i class="fas fa-chalkboard-teacher fa-3x text-white"></i></div>
+                    {% endif %}
+                    <span class="badge bg-purple mb-2">{{ ws.get_level_display }}</span>
+                    <h5 class="fw-bold">{{ ws.title }}</h5>
+                    <p class="text-muted small">{{ ws.description|truncatewords:25 }}</p>
+                    <div class="d-flex flex-wrap gap-2 text-muted small mb-3">
+                        <span><i class="fas fa-user-tie me-1"></i>{{ ws.instructor }}</span>
+                        <span><i class="fas fa-clock me-1"></i>{{ ws.duration }}</span>
+                        <span><i class="fas fa-signal me-1"></i>{{ ws.get_level_display }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-chalkboard fa-3x mb-3 text-muted"></i>
+                <h4 class="text-muted">No workshops available yet.</h4>
+                <p class="text-muted">We're planning exciting workshops — stay tuned!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

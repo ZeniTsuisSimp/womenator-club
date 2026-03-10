@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}About | Womenovators Club{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">About <span>Womenovators</span></h1>
+        <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
+            <ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li><li class="breadcrumb-item active">About</li></ol>
+        </nav>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h6 class="section-subtitle">Our Story</h6>
+                <h2 class="section-title">Who We <span>Are</span></h2>
+                <p class="lead">Womenovators Club is a vibrant college community dedicated to empowering women in STEM fields.</p>
+                <p>Founded with the vision of bridging the gender gap in technology, we bring together passionate women who aspire to innovate, lead, and create impact through technology.</p>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="row g-4">
+                    <div class="col-md-6"><div class="custom-card p-4 text-center h-100"><i class="fas fa-bullseye fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Mission</h5><p class="text-muted small">Empower women through technology education, hands-on experience, and community support.</p></div></div>
+                    <div class="col-md-6"><div class="custom-card p-4 text-center h-100"><i class="fas fa-eye fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Vision</h5><p class="text-muted small">A world where every woman has equal opportunity to thrive in technology and innovation.</p></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light-custom">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <h6 class="section-subtitle">Our Values</h6>
+            <h2 class="section-title">What We <span>Stand For</span></h2>
+        </div>
+        <div class="row g-4 mt-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up"><div class="custom-card p-4 text-center h-100"><i class="fas fa-handshake fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Inclusivity</h5><p class="text-muted">We welcome everyone regardless of background, experience, or skill level.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"><div class="custom-card p-4 text-center h-100"><i class="fas fa-lightbulb fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Innovation</h5><p class="text-muted">We encourage creative thinking and building real-world solutions.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200"><div class="custom-card p-4 text-center h-100"><i class="fas fa-users fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Community</h5><p class="text-muted">We believe in the power of collaboration and supporting each other.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <h6 class="section-subtitle">What We Do</h6>
+            <h2 class="section-title">Our <span>Activities</span></h2>
+        </div>
+        <div class="row g-4 mt-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up"><div class="custom-card p-4 h-100"><i class="fas fa-code fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Technical Workshops</h5><p class="text-muted">Hands-on workshops on Web Dev, AI/ML, Cybersecurity, and more.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"><div class="custom-card p-4 h-100"><i class="fas fa-trophy fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Competitions</h5><p class="text-muted">Quiz competitions, debates, poster-making, and caricature contests.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200"><div class="custom-card p-4 h-100"><i class="fas fa-project-diagram fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Team Projects</h5><p class="text-muted">Collaborative projects to build real-world skills and portfolio.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up"><div class="custom-card p-4 h-100"><i class="fas fa-chalkboard-teacher fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Mentorship</h5><p class="text-muted">Connect with industry professionals and experienced students.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"><div class="custom-card p-4 h-100"><i class="fas fa-network-wired fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Networking</h5><p class="text-muted">Industry connections and collaboration opportunities.</p></div></div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200"><div class="custom-card p-4 h-100"><i class="fas fa-certificate fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Certifications</h5><p class="text-muted">Earn certificates for participation and achievement.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Team Allocation -->
+<section class="section-padding bg-light-custom">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <h6 class="section-subtitle">AI-Powered</h6>
+            <h2 class="section-title">Skill-Based <span>Team Allocation</span></h2>
+            <p class="text-muted">When you register, our AI analyzes your skills and assigns you to the best-fit team.</p>
+        </div>
+        <div class="row g-4 mt-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up"><div class="custom-card p-4 text-center h-100"><i class="fas fa-code fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Technical Team</h5><p class="text-muted small">Coding, Web Dev, AI/ML, Data Science, Cybersecurity</p></div></div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100"><div class="custom-card p-4 text-center h-100"><i class="fas fa-paint-brush fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Media Team</h5><p class="text-muted small">Design, Photography, Video Editing, Social Media, Content</p></div></div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200"><div class="custom-card p-4 text-center h-100"><i class="fas fa-calendar-check fa-2x mb-3" style="color:var(--primary-purple)"></i><h5 class="fw-bold">Event Team</h5><p class="text-muted small">Leadership, Management, Organizing, Coordination, Communication</p></div></div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300"><div class="custom-card p-4 text-center h-100"><i class="fas fa-handshake fa-2x mb-3" style="color:var(--primary-pink)"></i><h5 class="fw-bold">Industry Collab</h5><p class="text-muted small">Networking, Business, Marketing, Sponsorship, Partnerships</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section text-center">
+    <div class="container" data-aos="zoom-in">
+        <h2 class="text-white fw-bold mb-3">Be Part of Our Story</h2>
+        <p class="text-white-50 mb-4">Join a community where women empower women.</p>
+        <a href="{% url 'membership' %}" class="btn btn-light btn-lg"><i class="fas fa-rocket me-2"></i>Join Now</a>
+    </div>
+</section>
+{% endblock %}

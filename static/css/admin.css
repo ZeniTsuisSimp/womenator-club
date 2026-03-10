@@ -1,0 +1,117 @@
+/* ===========================================
+   Womenovators Club - Admin Dashboard Styles
+   =========================================== */
+
+:root {
+    --primary-purple: #7B2D8E;
+    --primary-pink: #E91E8C;
+    --dark-purple: #4A0E5C;
+    --light-purple: #F3E5F5;
+    --gradient-primary: linear-gradient(135deg, #7B2D8E 0%, #E91E8C 100%);
+    --sidebar-width: 260px;
+}
+
+* { font-family: 'Poppins', sans-serif; }
+body { background: #f5f6fa; margin: 0; }
+
+/* ---- Layout ---- */
+.admin-wrapper { display: flex; min-height: 100vh; }
+
+/* ---- Sidebar ---- */
+.admin-sidebar {
+    width: var(--sidebar-width); background: var(--gradient-dark, linear-gradient(180deg, #4A0E5C, #7B2D8E));
+    color: #fff; position: fixed; top: 0; left: 0; height: 100vh;
+    overflow-y: auto; z-index: 1000; transition: transform .3s;
+}
+.sidebar-header {
+    padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.sidebar-header h4 { margin: 0; font-weight: 700; font-size: 1.2rem; }
+.sidebar-header small { opacity: .6; font-size: .75rem; }
+.sidebar-nav { list-style: none; padding: 15px 0; margin: 0; }
+.sidebar-nav li a {
+    display: flex; align-items: center; gap: 12px; padding: 12px 25px;
+    color: rgba(255,255,255,.7); text-decoration: none; transition: all .3s;
+    font-size: .9rem;
+}
+.sidebar-nav li a:hover, .sidebar-nav li.active a {
+    background: rgba(255,255,255,.1); color: #fff;
+}
+.sidebar-nav li.active a { border-left: 3px solid var(--primary-pink); }
+.sidebar-nav li a i { width: 20px; text-align: center; }
+.sidebar-nav li.divider { border-top: 1px solid rgba(255,255,255,.1); margin: 10px 0; }
+
+/* ---- Main Content ---- */
+.admin-content { flex: 1; margin-left: var(--sidebar-width); }
+.admin-topbar {
+    background: #fff; padding: 15px 25px; display: flex; align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05); position: sticky; top: 0; z-index: 999;
+}
+.admin-main { min-height: calc(100vh - 60px); }
+
+/* ---- Cards ---- */
+.admin-card {
+    background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    overflow: hidden; transition: all .3s;
+}
+.admin-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.admin-card-header {
+    padding: 18px 20px; border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.admin-card-body { padding: 20px; }
+
+/* ---- Stat Cards ---- */
+.stat-card {
+    background: #fff; border-radius: 12px; padding: 25px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06); position: relative;
+    overflow: hidden; transition: all .3s;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,.12); }
+.stat-card .stat-icon {
+    position: absolute; top: 15px; right: 20px; font-size: 2rem; opacity: .15;
+}
+.stat-card .stat-number { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
+.stat-card .stat-label { font-size: .85rem; opacity: .7; }
+.stat-purple { border-left: 4px solid var(--primary-purple); }
+.stat-purple .stat-icon, .stat-purple .stat-number { color: var(--primary-purple); }
+.stat-pink { border-left: 4px solid var(--primary-pink); }
+.stat-pink .stat-icon, .stat-pink .stat-number { color: var(--primary-pink); }
+.stat-blue { border-left: 4px solid #3498DB; }
+.stat-blue .stat-icon, .stat-blue .stat-number { color: #3498DB; }
+.stat-green { border-left: 4px solid #2ECC71; }
+.stat-green .stat-icon, .stat-green .stat-number { color: #2ECC71; }
+
+/* ---- Buttons ---- */
+.btn-primary-admin {
+    background: var(--gradient-primary); border: none; color: #fff;
+    padding: .5rem 1.5rem; border-radius: 8px; font-weight: 600; transition: all .3s;
+}
+.btn-primary-admin:hover {
+    transform: translateY(-2px); box-shadow: 0 4px 15px rgba(123, 45, 142, .3); color: #fff;
+}
+
+/* ---- Tables ---- */
+.table thead th {
+    background: #f8f9fa; font-weight: 600; font-size: .85rem;
+    color: #555; border-bottom: 2px solid #dee2e6;
+}
+.table td { vertical-align: middle; font-size: .9rem; }
+
+/* ---- Badges ---- */
+.bg-purple { background: var(--primary-purple) !important; }
+.bg-pending { background: #FFA726 !important; color: #fff; }
+.bg-approved { background: #66BB6A !important; color: #fff; }
+.bg-rejected { background: #EF5350 !important; color: #fff; }
+
+/* ---- Modal ---- */
+.modal-content { border: none; border-radius: 12px; overflow: hidden; }
+.modal-header { border-bottom: none; }
+.modal-footer { border-top: 1px solid #f0f0f0; }
+
+/* ---- Responsive ---- */
+@media (max-width: 992px) {
+    .admin-sidebar { transform: translateX(-100%); }
+    .admin-sidebar.show { transform: translateX(0); }
+    .admin-content { margin-left: 0; }
+}

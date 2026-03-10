@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate - {{ cert.certificate_number }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#f0f0f0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;font-family:'Poppins',sans-serif;}
+        .certificate{width:900px;height:636px;background:#fff;position:relative;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.15);}
+        .cert-border{position:absolute;inset:15px;border:3px solid #7B2D8E;}
+        .cert-border-inner{position:absolute;inset:20px;border:1px solid #E91E8C;}
+        .cert-corner{position:absolute;width:60px;height:60px;border:3px solid #7B2D8E;}
+        .cert-corner.tl{top:25px;left:25px;border-right:none;border-bottom:none;}
+        .cert-corner.tr{top:25px;right:25px;border-left:none;border-bottom:none;}
+        .cert-corner.bl{bottom:25px;left:25px;border-right:none;border-top:none;}
+        .cert-corner.br{bottom:25px;right:25px;border-left:none;border-top:none;}
+        .cert-content{position:relative;z-index:1;padding:50px 60px;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:center;}
+        .cert-logo{font-size:1.8rem;color:#7B2D8E;margin-bottom:5px;font-weight:700;}
+        .cert-logo i{color:#E91E8C;}
+        .cert-subtitle{font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:3px;margin-bottom:20px;}
+        .cert-title{font-family:'Playfair Display',serif;font-size:2.5rem;color:#7B2D8E;margin-bottom:5px;}
+        .cert-type{font-size:.85rem;color:#E91E8C;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;}
+        .cert-presented{font-size:.85rem;color:#666;margin-bottom:8px;}
+        .cert-name{font-family:'Playfair Display',serif;font-size:2rem;color:#4A0E5C;border-bottom:2px solid #E91E8C;display:inline-block;padding:0 30px 5px;margin-bottom:15px;}
+        .cert-desc{font-size:.8rem;color:#666;max-width:500px;margin:0 auto 20px;line-height:1.6;}
+        .cert-event{font-weight:600;color:#7B2D8E;}
+        .cert-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto;padding-top:15px;}
+        .cert-footer-item{text-align:center;font-size:.7rem;color:#888;}
+        .cert-footer-item .value{font-weight:600;color:#4A0E5C;font-size:.85rem;display:block;margin-bottom:3px;}
+        .cert-number{position:absolute;bottom:25px;right:40px;font-size:.65rem;color:#aaa;}
+        .cert-bg-circle{position:absolute;width:400px;height:400px;border-radius:50%;opacity:.03;background:#7B2D8E;}
+        .cert-bg-circle.c1{top:-100px;right:-100px;}
+        .cert-bg-circle.c2{bottom:-150px;left:-100px;}
+        .no-print{text-align:center;margin-top:20px;}
+        @media print{body{background:#fff;padding:0;}.no-print{display:none;}.certificate{box-shadow:none;}}
+    </style>
+</head>
+<body>
+    <div>
+        <div class="certificate">
+            <div class="cert-bg-circle c1"></div>
+            <div class="cert-bg-circle c2"></div>
+            <div class="cert-border"></div>
+            <div class="cert-border-inner"></div>
+            <div class="cert-corner tl"></div>
+            <div class="cert-corner tr"></div>
+            <div class="cert-corner bl"></div>
+            <div class="cert-corner br"></div>
+            <div class="cert-content">
+                <div class="cert-logo"><i class="fas fa-crown"></i> Womenovators Club</div>
+                <div class="cert-subtitle">Dronacharya College of Engineering</div>
+                <div class="cert-title">Certificate of Participation</div>
+                <div class="cert-type">{{ cert.event.type }}</div>
+                <div class="cert-presented">This is to certify that</div>
+                <div class="cert-name">{{ cert.member.full_name }}</div>
+                <div class="cert-desc">
+                    has successfully participated in <span class="cert-event">"{{ cert.event.title }}"</span>
+                    organized by the Womenovators Club on {{ cert.event.event_date|date:"F j, Y" }}.
+                </div>
+                <div class="cert-footer">
+                    <div class="cert-footer-item"><span class="value">{{ cert.created_at|date:"M j, Y" }}</span>Date of Issue</div>
+                    <div class="cert-footer-item"><span class="value">Faculty Advisor</span>Authorized Signatory</div>
+                    <div class="cert-footer-item"><span class="value">Club President</span>Womenovators Club</div>
+                </div>
+                <div class="cert-number">{{ cert.certificate_number }}</div>
+            </div>
+        </div>
+        <div class="no-print">
+            <button onclick="window.print()" style="margin-top:15px;padding:10px 30px;background:linear-gradient(135deg,#7B2D8E,#E91E8C);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;">
+                <i class="fas fa-print"></i> Print Certificate
+            </button>
+        </div>
+    </div>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</body>
+</html>

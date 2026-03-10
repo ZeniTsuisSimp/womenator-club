@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us | Womenovators Club{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Contact <span>Us</span></h1>
+        <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
+            <ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li><li class="breadcrumb-item active">Contact</li></ol>
+        </nav>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-5" data-aos="fade-right">
+                <h3 class="fw-bold mb-4" style="color:var(--dark-purple)">Get In Touch</h3>
+                <p class="text-muted mb-4">Have questions about the Womenovators Club? Want to organize an event or collaborate? Reach out to us!</p>
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-map-marker-alt"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Our Location</h6><p class="text-muted mb-0">Dronacharya College of Engineering, Khentawas, Farrukh Nagar, Gurugram, Haryana 122506</p></div>
+                </div>
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-envelope"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Email Us</h6><p class="text-muted mb-0">womenovators@gce.ac.in</p></div>
+                </div>
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-phone"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Call Us</h6><p class="text-muted mb-0">+91 98765 43210</p></div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="custom-card p-4 p-md-5">
+                    <h4 class="fw-bold mb-4" style="color:var(--dark-purple)">Send a Message</h4>
+                    {% if messages %}
+                    {% for msg in messages %}
+                    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">{{ msg }}<button class="btn-close" data-bs-dismiss="alert"></button></div>
+                    {% endfor %}
+                    {% endif %}
+                    <form method="post" action="{% url 'contact' %}">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="name" placeholder="Name" required>
+                                    <label>Your Name *</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                    <label>Your Email *</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                                    <label>Subject *</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" name="message" placeholder="Message" style="height:150px" required></textarea>
+                                    <label>Your Message *</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary-custom"><i class="fas fa-paper-plane me-2"></i>Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding pt-0">
+    <div class="container" data-aos="fade-up">
+        <div class="rounded overflow-hidden shadow">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3511.8!2d76.82!3d28.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDIxJzAwLjAiTiA3NsKwNDknMTIuMCJF!5e0!3m2!1sen!2sin!4v1" width="100%" height="350" style="border:0;" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+{% endblock %}

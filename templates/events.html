@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Events | Womenovators Club{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Our <span>Events</span></h1>
+        <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
+            <ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li><li class="breadcrumb-item active">Events</li></ol>
+        </nav>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4">
+            {% for event in events %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:50 }}">
+                <div class="event-card custom-card h-100">
+                    {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" class="event-image">
+                    {% else %}
+                    <div class="event-image d-flex align-items-center justify-content-center" style="height:200px; background:var(--gradient-primary);"><i class="fas fa-calendar-alt fa-3x text-white"></i></div>
+                    {% endif %}
+                    <div class="event-content p-4">
+                        <span class="event-badge">{{ event.type }}</span>
+                        <h5 class="fw-bold mt-2">{{ event.title }}</h5>
+                        <p class="text-muted small">{{ event.description|truncatewords:20 }}</p>
+                        <div class="event-meta mb-3">
+                            <span><i class="fas fa-calendar me-1"></i>{{ event.event_date|date:"M j, Y" }}</span>
+                            {% if event.event_time %}<span><i class="fas fa-clock me-1"></i>{{ event.event_time|time:"g:i A" }}</span>{% endif %}
+                            <span><i class="fas fa-map-marker-alt me-1"></i>{{ event.venue }}</span>
+                            <span><i class="fas fa-users me-1"></i>{{ event.registration_count }}/{{ event.max_participants }}</span>
+                        </div>
+                        {% if not event.is_full %}
+                        <button class="btn btn-primary-custom btn-sm w-100 event-register-btn" data-event-id="{{ event.id }}" data-event-title="{{ event.title }}">
+                            <i class="fas fa-ticket-alt me-2"></i>Register Now
+                        </button>
+                        {% else %}
+                        <button class="btn btn-secondary btn-sm w-100" disabled>Event Full</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>
+                <h4 class="text-muted">No events scheduled yet.</h4>
+                <p class="text-muted">Check back soon for exciting upcoming events!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Event Registration Modal -->
+<div class="modal fade" id="eventRegisterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--gradient-primary);">
+                <h5 class="modal-title text-white"><i class="fas fa-ticket-alt me-2"></i>Register for Event</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="modal-event-title" class="fw-bold mb-3" style="color:var(--dark-purple)"></h6>
+                <form id="event-register-form">
+                    <input type="hidden" id="modal-event-id" name="event_id">
+                    <div class="form-floating mb-3"><input type="text" class="form-control" name="member_name" placeholder="Name" required><label>Your Name *</label></div>
+                    <div class="form-floating mb-3"><input type="email" class="form-control" name="member_email" placeholder="Email" required><label>Email *</label></div>
+                    <div class="form-floating mb-3"><input type="tel" class="form-control" name="member_phone" placeholder="Phone"><label>Phone</label></div>
+                    <div class="form-floating mb-3"><input type="text" class="form-control" name="registration_id" placeholder="WN-2026-001"><label>Registration ID (if member)</label></div>
+                    <div id="event-reg-message" class="mb-3"></div>
+                    <button type="submit" class="btn btn-primary-custom w-100"><i class="fas fa-check me-2"></i>Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.event-register-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+        document.getElementById('modal-event-id').value=this.dataset.eventId;
+        document.getElementById('modal-event-title').textContent=this.dataset.eventTitle;
+        new bootstrap.Modal(document.getElementById('eventRegisterModal')).show();
+    });
+});
+document.getElementById('event-register-form')?.addEventListener('submit',function(e){
+    e.preventDefault();
+    const fd=new FormData(this);
+    const msgEl=document.getElementById('event-reg-message');
+    fetch('/api/event-register/',{method:'POST',body:fd})
+    .then(r=>r.json()).then(data=>{
+        msgEl.innerHTML=`<div class="alert alert-${data.success?'success':'danger'}">${data.message}</div>`;
+        if(data.success)this.reset();
+    }).catch(()=>msgEl.innerHTML='<div class="alert alert-danger">Something went wrong.</div>');
+});
+</script>
+{% endblock %}
