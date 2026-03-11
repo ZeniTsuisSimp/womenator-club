@@ -1,0 +1,207 @@
+{% extends 'dashboard/base_admin.html' %}
+{% block title %}{{ event.title }} - Participants{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h4 class="fw-bold mb-1"><i class="fas fa-users me-2"></i>{{ event.title }}</h4>
+        <p class="text-muted mb-0">
+            <span class="badge bg-purple me-2">{{ event.type }}</span>
+            {{ event.event_date|date:"M j, Y" }} &middot; {{ event.venue }}
+        </p>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary-admin" data-bs-toggle="modal" data-bs-target="#addParticipantModal"><i class="fas fa-plus me-1"></i>Add Participant</button>
+        <a href="{% url 'manage_events' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back to Events</a>
+    </div>
+</div>
+
+<!-- Messages -->
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Summary -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="admin-card-body p-3 text-center">
+                <h2 class="fw-bold text-purple mb-0">{{ total }}</h2>
+                <small class="text-muted">Total Registrations</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="admin-card-body p-3 text-center">
+                <h2 class="fw-bold text-success mb-0">{{ present_count }}</h2>
+                <small class="text-muted">Present</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="admin-card-body p-3 text-center">
+                <h2 class="fw-bold text-info mb-0">{{ member_count }}</h2>
+                <small class="text-muted">Club Members</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="admin-card-body p-3 text-center">
+                <h2 class="fw-bold text-warning mb-0">{{ non_member_count }}</h2>
+                <small class="text-muted">Non-Members</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="admin-card mb-4">
+    <div class="admin-card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Search</label>
+                <input type="text" class="form-control" name="search" value="{{ request.GET.search }}" placeholder="Name, email, phone...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Attendance</label>
+                <select class="form-select" name="attendance">
+                    <option value="">All</option>
+                    <option value="present" {% if request.GET.attendance == 'present' %}selected{% endif %}>Present</option>
+                    <option value="absent" {% if request.GET.attendance == 'absent' %}selected{% endif %}>Absent</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Type</label>
+                <select class="form-select" name="member_type">
+                    <option value="">All</option>
+                    <option value="member" {% if request.GET.member_type == 'member' %}selected{% endif %}>Club Members</option>
+                    <option value="non_member" {% if request.GET.member_type == 'non_member' %}selected{% endif %}>Non-Members</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-admin w-100"><i class="fas fa-search me-1"></i>Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Bulk Actions -->
+{% if registrations %}
+<div class="d-flex gap-2 mb-3">
+    <form method="post">{% csrf_token %}<input type="hidden" name="action" value="mark_all_present"><button type="submit" class="btn btn-outline-success btn-sm"><i class="fas fa-check-double me-1"></i>Mark All Present</button></form>
+    <form method="post">{% csrf_token %}<input type="hidden" name="action" value="mark_all_absent"><button type="submit" class="btn btn-outline-secondary btn-sm"><i class="fas fa-times me-1"></i>Mark All Absent</button></form>
+</div>
+{% endif %}
+
+<!-- Participants Table -->
+<div class="admin-card">
+    <div class="admin-card-body p-4">
+        <h6 class="fw-bold mb-3"><i class="fas fa-list me-2 text-purple"></i>Registered Participants</h6>
+        {% if registrations %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Member ID</th>
+                        <th>Attendance</th>
+                        <th>Registered On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for reg in registrations %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="fw-semibold">
+                        {{ reg.participant_name }}
+                        {% if reg.member %}
+                        <a href="{% url 'member_profile' reg.member.id %}" class="ms-1 text-purple" title="View Profile"><i class="fas fa-external-link-alt" style="font-size:.75rem"></i></a>
+                        {% endif %}
+                    </td>
+                    <td><small>{{ reg.email }}</small></td>
+                    <td><small>{{ reg.phone|default:"-" }}</small></td>
+                    <td>
+                        {% if reg.member %}
+                        <code>{{ reg.member.registration_id }}</code>
+                        {% else %}
+                        <span class="badge bg-secondary">Non-member</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="toggle_attendance">
+                            <input type="hidden" name="reg_id" value="{{ reg.id }}">
+                            {% if reg.is_present %}
+                            <button type="submit" class="btn btn-success btn-sm" title="Click to mark absent"><i class="fas fa-check-circle me-1"></i>Present</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-outline-secondary btn-sm" title="Click to mark present"><i class="fas fa-minus-circle me-1"></i>Absent</button>
+                            {% endif %}
+                        </form>
+                    </td>
+                    <td><small>{{ reg.registered_at|date:"M j, Y" }}</small></td>
+                    <td>
+                        <form method="post" class="d-inline" onsubmit="return confirm('Remove this participant?')">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="reg_id" value="{{ reg.id }}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Remove"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">No registrations for this event yet. Click "Add Participant" to add someone.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Participant Modal -->
+<div class="modal fade" id="addParticipantModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="modal-header" style="background:var(--gradient-primary);">
+                    <h5 class="modal-title text-white"><i class="fas fa-user-plus me-2"></i>Add Participant</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="participant_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Phone</label>
+                        <input type="text" class="form-control" name="phone">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-admin">Add Participant</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

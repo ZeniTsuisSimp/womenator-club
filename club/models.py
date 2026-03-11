@@ -12,6 +12,11 @@ class Member(models.Model):
         ('Event Team', 'Event Team'),
         ('Industry Collaboration Team', 'Industry Collaboration Team'),
     ]
+    MEMBERSHIP_CHOICES = [
+        ('Student Member', 'Student Member'),
+        ('Core Team Member', 'Core Team Member'),
+        ('Volunteer Member', 'Volunteer Member'),
+    ]
 
     registration_id = models.CharField(max_length=20, unique=True, editable=False)
     full_name = models.CharField(max_length=100)
@@ -19,7 +24,10 @@ class Member(models.Model):
     phone = models.CharField(max_length=15)
     department = models.CharField(max_length=100)
     year_semester = models.CharField(max_length=50)
+    college_name = models.CharField(max_length=200, blank=True, default='')
+    membership_category = models.CharField(max_length=30, choices=MEMBERSHIP_CHOICES, default='Student Member')
     skills = models.TextField(blank=True, default='')
+    technical_interests = models.TextField(blank=True, default='')
     achievements = models.TextField(blank=True, default='')
     photo = models.ImageField(upload_to='photos/', blank=True, null=True)
     college_id_file = models.FileField(upload_to='ids/', blank=True, null=True)
@@ -110,6 +118,7 @@ class EventRegistration(models.Model):
     participant_name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15, blank=True)
+    is_present = models.BooleanField(default=False)
     registered_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

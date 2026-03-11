@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#f4f0fa;font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f0fa;padding:30px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg,#7c3aed,#4c1d95);padding:30px 40px;text-align:center;">
+                            <h1 style="color:#ffffff;margin:0;font-size:24px;">🎉 Welcome to Womenator Club!</h1>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding:30px 40px;">
+                            <p style="font-size:16px;color:#333;">Dear <strong>{{ member.full_name }}</strong>,</p>
+                            <p style="font-size:15px;color:#555;line-height:1.6;">
+                                Thank you for registering with <strong>Womenator Club</strong>! We're thrilled to have you join our community of women empowering women in technology.
+                            </p>
+
+                            <!-- Registration Details -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f5ff;border-radius:8px;padding:20px;margin:20px 0;border:1px solid #e9e0ff;">
+                                <tr>
+                                    <td style="padding:20px;">
+                                        <h3 style="color:#7c3aed;margin:0 0 15px 0;font-size:16px;">📋 Your Registration Details</h3>
+                                        <table width="100%" cellpadding="5" cellspacing="0">
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;width:160px;">Registration ID:</td>
+                                                <td style="font-size:14px;padding:5px 0;"><strong style="color:#7c3aed;font-size:16px;">{{ member.registration_id }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">Name:</td>
+                                                <td style="font-size:14px;padding:5px 0;">{{ member.full_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">Email:</td>
+                                                <td style="font-size:14px;padding:5px 0;">{{ member.email }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">Department:</td>
+                                                <td style="font-size:14px;padding:5px 0;">{{ member.department }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">Year/Semester:</td>
+                                                <td style="font-size:14px;padding:5px 0;">{{ member.year_semester }}</td>
+                                            </tr>
+                                            {% if member.college_name %}
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">College:</td>
+                                                <td style="font-size:14px;padding:5px 0;">{{ member.college_name }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">Category:</td>
+                                                <td style="font-size:14px;padding:5px 0;">{{ member.membership_category }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:#666;font-size:14px;padding:5px 0;">Team Assigned:</td>
+                                                <td style="font-size:14px;padding:5px 0;"><strong style="color:#4c1d95;">{{ member.team_assigned }}</strong></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="font-size:15px;color:#555;line-height:1.6;">
+                                🔖 Please save your <strong>Registration ID</strong> — you'll need it for event registrations and certificate downloads.
+                            </p>
+
+                            <!-- What's Next -->
+                            <h3 style="color:#4c1d95;font-size:16px;margin:25px 0 10px;">🚀 What's Next?</h3>
+                            <ul style="font-size:14px;color:#555;line-height:1.8;padding-left:20px;">
+                                <li>Explore upcoming <strong>events and competitions</strong></li>
+                                <li>Attend <strong>workshops</strong> to build new skills</li>
+                                <li>Connect with your <strong>{{ member.team_assigned }}</strong> teammates</li>
+                                <li>Participate actively to earn <strong>certificates</strong></li>
+                            </ul>
+
+                            <p style="font-size:14px;color:#888;margin-top:25px;">
+                                If you have any questions, reach out to us at <a href="mailto:info@womenovatorsclub.com" style="color:#7c3aed;">info@womenovatorsclub.com</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color:#4c1d95;padding:20px 40px;text-align:center;">
+                            <p style="color:#d4bfff;font-size:13px;margin:0;">Empower. Educate. Elevate.</p>
+                            <p style="color:#a78bfa;font-size:12px;margin:8px 0 0;">© 2026 Womenator Club. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

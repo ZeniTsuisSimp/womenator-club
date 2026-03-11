@@ -11,6 +11,9 @@ from django.utils.text import slugify
 from django.db.models import Count, Q
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings as django_settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from .models import (
     Member, Event, EventRegistration, Workshop, Achievement,
@@ -78,10 +81,35 @@ def membership(request):
             messages.success(request,
                 f'Registration successful! Your Registration ID is: {member.registration_id}. '
                 f'You have been assigned to: {member.team_assigned}')
+            _send_membership_confirmation(member)
             return redirect('membership')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{error}')
     else:
         form = MembershipForm()
     return render(request, 'membership.html', {'form': form})
+
+
+def _send_membership_confirmation(member):
+    """Send confirmation email to newly registered member."""
+    try:
+        subject = f'Welcome to Womenator Club! Your Registration ID: {member.registration_id}'
+        html_message = render_to_string('emails/membership_confirmation.html', {
+            'member': member,
+        })
+        plain_message = strip_tags(html_message)
+        send_mail(
+            subject,
+            plain_message,
+            django_settings.DEFAULT_FROM_EMAIL,
+            [member.email],
+            html_message=html_message,
+            fail_silently=True,
+        )
+    except Exception as e:
+        logger.warning(f'Failed to send confirmation email to {member.email}: {e}')
 
 
 # ═══════════════════════════════════════════
@@ -164,24 +192,30 @@ def api_chatbot(request):
 
 logger = logging.getLogger(__name__)
 
-SARVAM_SYSTEM_PROMPT = """You are the friendly assistant for Womenovators Club — a college community empowering women in technology.
+SARVAM_SYSTEM_PROMPT = """You are the friendly assistant for Womenovators Club — a college community exclusively for women, dedicated to empowering women in technology.
 
 Key facts about the club:
+- This club and ALL its activities are exclusively for women/females
 - Mission: Empower, Educate, Elevate women in tech
-- Membership is completely FREE
+- Membership is completely FREE (open only to women)
 - Teams: Technical, Media, Event, and Industry Collaboration (auto-assigned based on skills)
-- Events: Quiz Competitions, Debates, Poster-Making Contests, Caricature, Workshops
+- Events: Quiz Competitions, Debates, Poster-Making Contests, Caricature, Workshops (all women-only)
 - Workshops: Web Dev, AI/ML, UI/UX Design, Cybersecurity, and more
 - Certificates are provided for event participation
 - Contact: info@womenovatorsclub.com
 
-Useful links to share:
-- Membership: /membership/
-- Events: /events/
-- Workshops: /workshops/
-- About: /about/
-- Contact: /contact/
+If someone asks whether males/boys can join, politely let them know this club is exclusively for women and girls.
 
+Useful pages (ALWAYS use HTML anchor tags when linking):
+- Membership: <a href='/membership/'>Membership page</a>
+- Events: <a href='/events/'>Events page</a>
+- Workshops: <a href='/workshops/'>Workshops page</a>
+- About: <a href='/about/'>About page</a>
+- Contact: <a href='/contact/'>Contact page</a>
+- Gallery: <a href='/#gallery'>Gallery</a>
+- Achievements: <a href='/#achievements'>Achievements</a>
+
+IMPORTANT: When referring users to a page, ALWAYS include the clickable HTML link using <a href='...'> tags. Never just mention the page name without a link.
 Keep responses concise (2-3 sentences), friendly, and helpful. Use emojis sparingly. If asked something unrelated to the club, politely steer back to club topics."""
 
 
@@ -218,7 +252,25 @@ def _sarvam_chat(message, api_key):
     content = data['choices'][0]['message']['content'].strip()
     # Strip <think>...</think> reasoning tags from response
     content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+    # Convert any plain-text paths to clickable HTML links
+    content = _linkify_paths(content)
     return content
+
+
+def _linkify_paths(text):
+    """Convert plain /path/ references to clickable links if not already wrapped in <a> tags."""
+    path_labels = {
+        '/membership/': 'Membership page',
+        '/events/': 'Events page',
+        '/workshops/': 'Workshops page',
+        '/about/': 'About page',
+        '/contact/': 'Contact page',
+    }
+    for path, label in path_labels.items():
+        # Only replace if not already inside an href or <a> tag
+        if path in text and f"href='{path}'" not in text and f'href="{path}"' not in text:
+            text = text.replace(path, f"<a href='{path}'>{label}</a>")
+    return text
 
 
 def _fallback_response(message):
@@ -239,9 +291,11 @@ def _fallback_response(message):
         r'contact|reach|email|help':
             "Reach us at info@womenovatorsclub.com or visit <a href='/contact/'>Contact page</a>. 📧",
         r'about|who|what is|womenovator':
-            "Womenovators Club empowers women in tech. Mission: Empower, Educate, Elevate! 💜 <a href='/about/'>Learn more</a>.",
+            "Womenovators Club is an exclusive women's community empowering women in tech. Mission: Empower, Educate, Elevate! 💜 <a href='/about/'>Learn more</a>.",
+        r'male|boy|men|man|guy|gender|girl|female|women only|who can join|eligible|eligibility':
+            "Womenovators Club is exclusively for women and girls! 👩‍💻 All our events, workshops, and activities are designed for women. Head to our <a href='/membership/'>Membership page</a> to join! 💜",
         r'hello|hi|hey|good morning|good evening':
-            "Hello! 👋 Welcome to Womenovators Club! Ask about membership, events, workshops, or anything!",
+            "Hello! 👋 Welcome to Womenovators Club — a community exclusively for women in tech! Ask about membership, events, workshops, or anything!",
         r'thank|thanks':
             "You're welcome! 😊 Ask anytime!",
         r'bye|goodbye':
@@ -354,6 +408,98 @@ def manage_members(request):
 
     return render(request, 'dashboard/members.html', {
         'members': qs, 'search': search, 'status_filter': status or '', 'team_filter': team or ''
+    })
+
+
+@login_required
+def member_profile(request, member_id):
+    member = get_object_or_404(Member, id=member_id)
+    event_registrations = EventRegistration.objects.filter(
+        Q(member=member) | Q(email=member.email)
+    ).select_related('event')
+    certificates = Certificate.objects.filter(member=member)
+    return render(request, 'dashboard/member_profile.html', {
+        'member': member,
+        'event_registrations': event_registrations,
+        'certificates': certificates,
+    })
+
+
+@login_required
+def event_participants(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'add':
+            name = request.POST.get('participant_name', '').strip()
+            email = request.POST.get('email', '').strip()
+            phone = request.POST.get('phone', '').strip()
+            if name and email:
+                member = Member.objects.filter(email=email).first()
+                if not EventRegistration.objects.filter(event=event, email=email).exists():
+                    EventRegistration.objects.create(
+                        event=event, participant_name=name, email=email,
+                        phone=phone, member=member,
+                    )
+                    messages.success(request, f'{name} added to event.')
+                else:
+                    messages.warning(request, f'{email} is already registered.')
+            else:
+                messages.error(request, 'Name and email are required.')
+
+        elif action == 'delete':
+            reg_id = request.POST.get('reg_id')
+            EventRegistration.objects.filter(id=reg_id, event=event).delete()
+            messages.success(request, 'Participant removed.')
+
+        elif action == 'toggle_attendance':
+            reg_id = request.POST.get('reg_id')
+            reg = EventRegistration.objects.filter(id=reg_id, event=event).first()
+            if reg:
+                reg.is_present = not reg.is_present
+                reg.save()
+
+        elif action == 'mark_all_present':
+            EventRegistration.objects.filter(event=event).update(is_present=True)
+            messages.success(request, 'All marked present.')
+
+        elif action == 'mark_all_absent':
+            EventRegistration.objects.filter(event=event).update(is_present=False)
+            messages.success(request, 'All marked absent.')
+
+        return redirect('event_participants', event_id=event.id)
+
+    registrations = EventRegistration.objects.filter(event=event).select_related('member')
+
+    # Filters
+    search = request.GET.get('search', '').strip()
+    attendance = request.GET.get('attendance', '')
+    member_type = request.GET.get('member_type', '')
+    if search:
+        registrations = registrations.filter(
+            Q(participant_name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search)
+        )
+    if attendance == 'present':
+        registrations = registrations.filter(is_present=True)
+    elif attendance == 'absent':
+        registrations = registrations.filter(is_present=False)
+    if member_type == 'member':
+        registrations = registrations.filter(member__isnull=False)
+    elif member_type == 'non_member':
+        registrations = registrations.filter(member__isnull=True)
+
+    total = EventRegistration.objects.filter(event=event).count()
+    member_count = EventRegistration.objects.filter(event=event, member__isnull=False).count()
+    non_member_count = EventRegistration.objects.filter(event=event, member__isnull=True).count()
+    present_count = EventRegistration.objects.filter(event=event, is_present=True).count()
+    return render(request, 'dashboard/event_participants.html', {
+        'event': event,
+        'registrations': registrations,
+        'total': total,
+        'member_count': member_count,
+        'non_member_count': non_member_count,
+        'present_count': present_count,
     })
 
 

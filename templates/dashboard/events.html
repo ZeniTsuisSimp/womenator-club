@@ -19,7 +19,7 @@
                     <td><span class="badge bg-purple">{{ e.type }}</span></td>
                     <td>{{ e.event_date|date:"M j, Y" }}</td>
                     <td>{{ e.venue }}</td>
-                    <td>{{ e.registration_count }}/{{ e.max_participants }}</td>
+                    <td><a href="{% url 'event_participants' e.id %}" class="text-decoration-none fw-semibold">{{ e.registration_count }}/{{ e.max_participants }}</a></td>
                     <td>{% if e.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
                     <td>
                         <div class="btn-group btn-group-sm">

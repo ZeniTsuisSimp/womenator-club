@@ -4,17 +4,21 @@
 {% block content %}
 <section class="page-header">
     <div class="container">
-        <h1 data-aos="fade-up">Join <span>Womenovators</span></h1>
+        <h1 data-aos="fade-up">Join <span>Womenator Club</span></h1>
+        <p class="text-white mt-2" data-aos="fade-up" data-aos-delay="50">A platform dedicated to empowering female students through skill development, leadership training, technical learning, and innovation opportunities.</p>
         <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="100">
             <ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li><li class="breadcrumb-item active">Membership</li></ol>
         </nav>
     </div>
 </section>
 
+<!-- Registration Form + Side Info -->
 <section class="section-padding">
     <div class="container">
         <div class="row g-5 align-items-start">
+            <!-- Left Side: Why Join + After Submission -->
             <div class="col-lg-5" data-aos="fade-right">
+                <div style="position:sticky;top:100px;">
                 <h3 class="fw-bold mb-3" style="color:var(--dark-purple)">Why Join Us?</h3>
                 <p class="text-muted mb-4">Become part of a vibrant community dedicated to empowering women through technology, creativity, and leadership.</p>
                 <div class="benefit-item d-flex mb-3">
@@ -33,10 +37,25 @@
                     <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-trophy"></i></div></div>
                     <div class="ms-3"><h6 class="fw-bold mb-1">Recognition</h6><p class="text-muted small mb-0">Your achievements are showcased on our platform and social media.</p></div>
                 </div>
+                <div class="benefit-item d-flex mb-3">
+                    <div class="flex-shrink-0"><div class="icon-circle"><i class="fas fa-chalkboard-teacher"></i></div></div>
+                    <div class="ms-3"><h6 class="fw-bold mb-1">Industry Expert Sessions</h6><p class="text-muted small mb-0">Attend sessions by industry experts and gain real-world insights.</p></div>
+                </div>
+
+                <div class="custom-card p-4 mt-4" style="background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple)); color: white;">
+                    <h6 class="fw-bold mb-2"><i class="fas fa-id-badge me-2"></i>After Submission</h6>
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-1"><i class="fas fa-check-circle me-2"></i>A membership registration ID will be generated (e.g. <code style="color:#ffd700">WN-2026-045</code>)</li>
+                        <li><i class="fas fa-check-circle me-2"></i>You'll be auto-assigned to the best-fit team</li>
+                    </ul>
+                </div>
+                </div>
             </div>
+
+            <!-- Right Side: Registration Form -->
             <div class="col-lg-7" data-aos="fade-left">
                 <div class="custom-card p-4 p-md-5">
-                    <h4 class="fw-bold mb-4" style="color:var(--dark-purple)"><i class="fas fa-user-plus me-2"></i>Membership Application</h4>
+                    <h4 class="fw-bold mb-4" style="color:var(--dark-purple)"><i class="fas fa-user-plus me-2"></i>Membership Registration</h4>
                     {% if messages %}
                     {% for msg in messages %}
                     <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">{{ msg }}<button class="btn-close" data-bs-dismiss="alert"></button></div>
@@ -44,10 +63,13 @@
                     {% endif %}
                     <form method="post" action="{% url 'membership' %}" enctype="multipart/form-data">
                         {% csrf_token %}
+
+                        <!-- Personal Information -->
+                        <h6 class="fw-bold mb-3 mt-2" style="color:var(--primary-purple)"><i class="fas fa-user me-2"></i>Personal Information</h6>
                         <div class="row g-3">
                             <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" name="full_name" placeholder="Name" required><label>Full Name *</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="email" class="form-control" name="email" placeholder="Email" required><label>Email *</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="tel" class="form-control" name="phone" placeholder="Phone" required><label>Phone *</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="email" class="form-control" name="email" placeholder="Email" required><label>Email Address *</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="tel" class="form-control" name="phone" placeholder="Phone" required><label>Phone Number *</label></div></div>
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" name="department" required>
@@ -62,7 +84,7 @@
                                         <option value="AI & ML">AI & ML</option>
                                         <option value="Other">Other</option>
                                     </select>
-                                    <label>Department *</label>
+                                    <label>Department / Course *</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -81,26 +103,175 @@
                                     <label>Year / Semester *</label>
                                 </div>
                             </div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" name="achievements" placeholder="Achievements"><label>Achievements</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" name="college_name" placeholder="College Name"><label>College Name</label></div></div>
+                        </div>
+
+                        <!-- Membership Category -->
+                        <h6 class="fw-bold mb-3 mt-4" style="color:var(--primary-purple)"><i class="fas fa-id-card me-2"></i>Membership Category</h6>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <select class="form-select" name="membership_category" required>
+                                        <option value="Student Member">Student Member</option>
+                                        <option value="Core Team Member">Core Team Member</option>
+                                        <option value="Volunteer Member">Volunteer Member</option>
+                                    </select>
+                                    <label>Select Category *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills & Interests -->
+                        <h6 class="fw-bold mb-3 mt-4" style="color:var(--primary-purple)"><i class="fas fa-lightbulb me-2"></i>Skills & Interests</h6>
+                        <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
                                     <textarea class="form-control" name="skills" placeholder="Skills" style="height:80px" required></textarea>
                                     <label>Skills & Interests (comma-separated) *</label>
                                 </div>
-                                <small class="text-muted">E.g.: Python, Web Design, AI, Public Speaking, Content Writing</small>
+                                <small class="text-muted">E.g.: Programming, Graphic Design, Public Speaking, Event Management, Digital Marketing</small>
                             </div>
+                        </div>
+
+                        <!-- Technical Interests -->
+                        <h6 class="fw-bold mb-3 mt-4" style="color:var(--primary-purple)"><i class="fas fa-code me-2"></i>Technical Interests</h6>
+                        <p class="text-muted small mb-2">Choose areas you want to learn:</p>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="technical_interests" value="Web Development" id="ti_web"><label class="form-check-label" for="ti_web">Web Development</label></div></div>
+                            <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="technical_interests" value="Artificial Intelligence" id="ti_ai"><label class="form-check-label" for="ti_ai">Artificial Intelligence</label></div></div>
+                            <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="technical_interests" value="Data Science" id="ti_ds"><label class="form-check-label" for="ti_ds">Data Science</label></div></div>
+                            <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="technical_interests" value="Python Programming" id="ti_py"><label class="form-check-label" for="ti_py">Python Programming</label></div></div>
+                            <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="technical_interests" value="UI/UX Design" id="ti_ux"><label class="form-check-label" for="ti_ux">UI/UX Design</label></div></div>
+                            <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="technical_interests" value="Cyber Security" id="ti_cs"><label class="form-check-label" for="ti_cs">Cyber Security</label></div></div>
+                        </div>
+
+                        <!-- Achievements -->
+                        <h6 class="fw-bold mb-3 mt-4" style="color:var(--primary-purple)"><i class="fas fa-award me-2"></i>Achievements <span class="text-muted fw-normal small">(Optional)</span></h6>
+                        <div class="row g-3">
                             <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" name="achievements" placeholder="Achievements" style="height:80px"></textarea>
+                                    <label>Achievements</label>
+                                </div>
+                                <small class="text-muted">Academic awards, competition participation, technical certifications, leadership experience</small>
+                            </div>
+                        </div>
+
+                        <!-- Upload Documents -->
+                        <h6 class="fw-bold mb-3 mt-4" style="color:var(--primary-purple)"><i class="fas fa-upload me-2"></i>Upload Documents</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Profile Photo</label>
                                 <input type="file" class="form-control" name="photo" accept="image/*">
                             </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary-custom btn-lg w-100"><i class="fas fa-paper-plane me-2"></i>Submit Application</button>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">College ID Card</label>
+                                <input type="file" class="form-control" name="college_id_file" accept="image/*,.pdf">
                             </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Achievement Proof</label>
+                                <input type="file" class="form-control" name="achievement_proof" accept="image/*,.pdf">
+                                <small class="text-muted">Optional</small>
+                            </div>
+                        </div>
+
+                        <!-- Declaration -->
+                        <div class="mt-4 p-3 rounded" style="background: #f8f5ff; border: 1px solid var(--primary-purple)">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="declaration" name="declaration" required>
+                                <label class="form-check-label" for="declaration">
+                                    I hereby declare that the information provided by me is correct. I agree to actively participate in the activities and initiatives of the <strong>Womenator Club</strong>.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary-custom btn-lg w-100"><i class="fas fa-paper-plane me-2"></i>Submit Application</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Membership Benefits -->
+<section class="section-padding" style="background:var(--light-bg)">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold" style="color:var(--dark-purple)">Membership Benefits</h2>
+            <p class="text-muted">Members of Womenator Club will get the opportunity to:</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-laptop-code"></i></div>
+                    <h6 class="fw-bold">Technical Workshops</h6>
+                    <p class="text-muted small mb-0">Participate in technical workshops and training programs</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-trophy"></i></div>
+                    <h6 class="fw-bold">Competitions</h6>
+                    <p class="text-muted small mb-0">Join Quiz, Debate, Poster Making, Caricature and more</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-users"></i></div>
+                    <h6 class="fw-bold">Leadership & Networking</h6>
+                    <p class="text-muted small mb-0">Develop leadership, communication skills and build professional networks</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-certificate"></i></div>
+                    <h6 class="fw-bold">Certificates & Recognition</h6>
+                    <p class="text-muted small mb-0">Receive certificates and showcase your achievements and talents</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Membership Categories -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold" style="color:var(--dark-purple)">Membership Categories</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-user-graduate"></i></div>
+                    <h5 class="fw-bold" style="color:var(--dark-purple)">Student Member</h5>
+                    <p class="text-muted small mb-0">For female students who want to enhance their skills and actively participate in club activities.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-star"></i></div>
+                    <h5 class="fw-bold" style="color:var(--dark-purple)">Core Team Member</h5>
+                    <p class="text-muted small mb-0">Selected students who will manage events, workshops, and club activities.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="custom-card p-4 text-center h-100">
+                    <div class="icon-circle mx-auto mb-3"><i class="fas fa-hands-helping"></i></div>
+                    <h5 class="fw-bold" style="color:var(--dark-purple)">Volunteer Member</h5>
+                    <p class="text-muted small mb-0">Students who assist in organizing events and promoting club initiatives.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact for Membership -->
+<section class="section-padding" style="background:var(--light-bg)">
+    <div class="container text-center" data-aos="fade-up">
+        <h4 class="fw-bold mb-3" style="color:var(--dark-purple)">Contact for Membership Queries</h4>
+        <p class="text-muted mb-1"><i class="fas fa-envelope me-2"></i>Email: <a href="mailto:info@womenovatorsclub.com">info@womenovatorsclub.com</a></p>
     </div>
 </section>
 {% endblock %}
